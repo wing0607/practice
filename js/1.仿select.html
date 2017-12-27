@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{padding: 0; margin: 0; box-sizing: border-box;}
+        li{ list-style: none}
+        .select-container{ position: relative;margin:30px auto; width: 150px;}
+        .select-input{ height: 30px;border: 1px solid #ccc; width: 150px; padding: 5px}
+        .select-ul{position: absolute; width: 150px;border: 1px solid #ccc;top:30px; display: none}
+        .select-ul li{padding: 5px; cursor: pointer;}
+    </style>
+    <script type="text/javascript">
+        /* window.onload=function(){
+             var oDiv=document.getElementById('select');
+             var oInput=oDiv.getElementsByTagName('input')[0];
+             var oUl=oDiv.getElementsByTagName('ul')[0];
+             var aLi=oUl.getElementsByTagName('li');
+             oInput.onfocus=function () {
+                 oUl.style.display='block';
+             }
+             document.onmousedown=function (ev) {
+                 var oEvent=ev||event;
+                 var target=oEvent.target||oEvent.srcElement;
+                 if(target.parentNode!==oUl&&target!==oInput){
+                     oUl.style.display='none';
+                 }
+             }
+             for(var i=0;i<aLi.length;i++){
+                 aLi[i].onclick=function () {
+                     oInput.value=this.innerHTML;
+                     oUl.style.display='none';
+                 }
+             }
+         }*/
+
+         //先变型:
+         //尽量不要出现函数嵌套函数
+         //可以有全局变量
+         //把onload中不是赋值的语句放到单独函数中
+      /* var oDiv=null;
+        var oInput=null;
+        var oUl=null;
+        var aLi=null;
+        window.onload=function(){
+             oDiv=document.getElementById('select');
+             oInput=oDiv.getElementsByTagName('input')[0];
+             oUl=oDiv.getElementsByTagName('ul')[0];
+             aLi=oUl.getElementsByTagName('li');
+             init();
+        }
+        function init(){
+            oInput.onfocus=funfocus;
+            document.onmousedown=fundown;
+            for(var i=0;i<aLi.length;i++){
+                aLi[i].onclick=funclick;
+            }
+        }
+
+        function funfocus() {
+            oUl.style.display='block';
+        }
+        function fundown(ev) {
+            var oEvent=ev||event;
+            var target=oEvent.target||oEvent.srcElement;
+            if(target.parentNode!==oUl&&target!==oInput){
+                oUl.style.display='none';
+            }
+        }
+        function funclick() {
+            oInput.value=this.innerHTML;
+            oUl.style.display='none';
+        }*/
+        //改成面向对象:
+        //全局变量就是属性
+        //函数就是方法
+        //Onload中创建对象
+
+        //改this指向问题 : 事件或者是定时器,尽量让面向对象中的this指向对象
+      window.onload=function () {
+           var s1=new funsele('select1');
+           s1.init();
+
+       }
+       function funsele(Id){
+            this.oDiv=document.getElementById(Id);
+            this.oInput=this.oDiv.getElementsByTagName('input')[0];
+            this.oUl=this.oDiv.getElementsByTagName('ul')[0];
+            this.aLi=this.oUl.getElementsByTagName('li');
+        }
+        funsele.prototype.init=function(){
+            var This=this;
+            this.oInput.onfocus=function(){
+                This.funfocus();
+            }
+            document.onmousedown=function(ev){
+                This.fundown(ev);
+            }
+            for(var i=0;i<this.aLi.length;i++){
+                this.aLi[i].onclick= function(){
+                    This.funclick(this);
+                }
+            }
+        }
+        funsele.prototype.funfocus=function() {
+            this.oUl.style.display='block';
+        }
+        funsele.prototype.fundown=function(ev) {
+            var oEvent=ev||event;
+            this.target=oEvent.target||oEvent.srcElement;
+            if(this.target.parentNode!==this.oUl&&this.target!==this.oInput){
+                this.oUl.style.display='none';
+            }
+        }
+        funsele.prototype.funclick=function(obj) {
+            this.oInput.value=obj.innerHTML;
+            this.oUl.style.display='none';
+        }
+
+    </script>
+</head>
+<body>
+<div class="select-container" id="select1">
+     <input type="text" value="" placeholder="请选择" class="select-input">
+     <ul class="select-ul">
+         <li>选项1</li>
+         <li>选项2</li>
+         <li>选项3</li>
+     </ul>
+</div>
+
+
+
+</body>
+</html>
